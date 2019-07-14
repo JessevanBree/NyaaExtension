@@ -1,37 +1,53 @@
+// IF the user clicks on the extension icon execute CreateMagnetLink
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if( request.message === "clicked_browser_action" ) {
-            doTheThing();
+            CreateMagnetLink();
         }
     }
 );
 
-function doTheThing(){
+/**
+ * Creates magnet url to add to clipboard
+ */
+function CreateMagnetLink(){
     let children = $("body > div > div.table-responsive > table > tbody > tr > td > a:nth-child(2)");
-    let allLinks = "";
+    let magnetUrl = "";
     children.each(function(key, value ) {
+        // Check if value is a magnet url
         if(value.href.includes("magnet")){
             let href = value.href;
-            allLinks += href + "\n";
+            // combine magnet url's
+            magnetUrl += href + "\n";
+
+            // Check if this is the last element in the each loop
+            if(key+1 === children.length){
+                addToClipboard(magnetUrl);
+                console.log("\nOutput: \n" + magnetUrl);
+            }
         }
-        
     });
-    
+}
+
+/**
+ * Add's date to clipboard
+ * @param {String} clipboardData data that gets inserten into clipboard 
+ */
+function addToClipboard(clipboardData) {
+    // Check if the plugin has permission to edit the clipboard
     navigator.permissions.query({name: "clipboard-write"}).then(result => {
         if (result.state == "granted" || result.state == "prompt") {
-            /* write to the clipboard now */
-            navigator.clipboard.writeText(allLinks).then(function() {
-                /* clipboard successfully set */
-                alert("URL's succesfully added to clipboard")
-            }, function() {
-                /* clipboard write failed */
-                alert("can't write to clipboard, try again or see dev console")
+            // Try to write the clipboardDate to users clipboard
+            navigator.clipboard.writeText(clipboardData).then(function(a, b, c) {
+                console.log(a, b, c)
+                alert("URL's succesfully added to clipboard");
+            }, function(y,u,i) {
+                console.log(y,u,i)
+
+                alert("can't write to clipboard, try again or see dev console");
             });
-            
-            console.log("Output:");
-            console.log(allLinks);
+        } else {
+            alert("Error writing to clipboard, try again or see dev console");
         }
     });
-    
-    // console.log("Copy manualy")
 }

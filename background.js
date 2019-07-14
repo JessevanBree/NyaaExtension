@@ -1,9 +1,9 @@
-// Called when the user clicks on the browser action.
+// Add a onclick listener to the chrome extension
 chrome.browserAction.onClicked.addListener(function(tab) {
-    console.log(tab)
-    // Send a message to the active tab
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  // Get the current tabs that are open
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       var activeTab = tabs[0];
+      // Sent a message to the active tab that the user clicked on the extension icon
       chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
     });
 });
