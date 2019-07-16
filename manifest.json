@@ -1,6 +1,6 @@
 {
 	"name": "Nyaa Magnet Copy",
-	"version": "0.1",
+	"version": "1",
 	"description": "Copy's all  the magnet urls from page",
 	"browser_action": { "default_title": "Nyaa Magnet Copy" },
 	"permissions": [
@@ -13,7 +13,7 @@
 	},
 	"content_scripts": [{
 		"matches": [
-			"<all_urls>"
+			"https://nyaa.si/*"
 		],
 		"js": [
 			"jquery.min.js",
